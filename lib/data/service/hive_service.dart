@@ -12,7 +12,7 @@ class HiveService {
 
     await box.put('currentWeather', weatherData);
 
-    await box.put('lastUpdated', DateTime.now().toIso8601String() as HiveOpenWeatherModel);
+    // await box.put('lastUpdated', DateTime.now().toIso8601String());
   }
 
 

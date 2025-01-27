@@ -14,7 +14,6 @@ import 'package:open_weather/utils/custom_alert_dialog.dart';
 import '../constants/language_list.dart';
 import '../data/model/hive_weather_model.dart';
 import '../data/service/hive_service.dart';
-import '../utils/connectivity.dart';
 import '../utils/date_time_function.dart';
 import '../utils/language_substring_utils.dart';
 
@@ -99,7 +98,6 @@ class _HomePageState extends State<HomePage> {
     List<OpenWeatherListModel?>? dataList = data.list;
     String? weatherDescription;
     String? weatherMain;
-    String weatherIcon = '';
     String bgImage = '';
     String bgImageN = '';
     IconData?icons;
@@ -161,6 +159,7 @@ class _HomePageState extends State<HomePage> {
           break;
       }
     }
+
     double? temperature;
     //fl chart
     List<FlSpot> spots = [];
@@ -344,7 +343,7 @@ class _HomePageState extends State<HomePage> {
                                         child: SizedBox(
                                           width: spots.length * 100.0, // Adjust width based on data points
                                           child: LineChart(
-                                            duration: const Duration(milliseconds: 86400000),
+                                            duration: const Duration(hours: 24),
                                             LineChartData(
                                               // minX: 0,
                                                 maxX: spots.length.toDouble() - 1,
@@ -354,7 +353,8 @@ class _HomePageState extends State<HomePage> {
                                                   LineChartBarData(
                                                     spots: spots,
                                                     isCurved: true,
-                                                    color: Colors.blue,
+                                                    barWidth: 2.5,
+                                                    color: Colors.yellowAccent,
                                                     dotData: FlDotData(show: false),
                                                     belowBarData: BarAreaData(show: false),
                                                   ),
@@ -467,7 +467,7 @@ class _HomePageState extends State<HomePage> {
           ),
 
           Text(
-            temp,
+            description,
             // '$temp°C',
             style: TextStyle(fontSize: 16,color: Colors.black),
           ),
@@ -503,7 +503,7 @@ class _HomePageState extends State<HomePage> {
               children: groupedData.entries.map((entry) {
                 return _buildWeatherModalSheet(
                   getDayOfWeek(entry.key),
-                  entry.value.first.weather?.firstOrNull?.description ?? '',
+                  entry.value.first.weather?.firstOrNull?.main ?? '',
                   entry.value.first.weather?.firstOrNull?.icon ?? '', // Replace with appropriate icon
                 );
               }).toList(),

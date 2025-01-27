@@ -54,7 +54,7 @@ String getDayOfWeek(String dateString) {
 
   DateTime date = DateTime.parse(dateString);
 
-  String dayOfWeek = DateFormat('EEEE').format(date);
+  String dayOfWeek = DateFormat('EE').format(date);
 
   return dayOfWeek;
 }
