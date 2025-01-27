@@ -173,9 +173,6 @@ class _HomePageState extends State<HomePage> {
           bgImage = day;
           break;
       }
-
-      debugPrint("Loading image: $bgImage");
-      debugPrint("Loading image: $bgImageN");
     }
 
     Map<String, double> uniqueHourlyData = {};

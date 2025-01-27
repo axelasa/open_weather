@@ -35,7 +35,11 @@ class ErrorWidgetClass extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
         useMaterial3: true,
       ),
-      home: NetworkSettingsPage(),
+      home: CustomAlertDialog(
+          title: 'Connection Failed',
+          message:
+          'Sorry, there was an error while loading the app, please ensure that you are connected to the internet and restart your application again',
+          ),
       );
   }
 }
