@@ -54,7 +54,7 @@ terminal
 
 flutter pub get
 
-API_KEY=your_api_key_here
+API_KEY=your_api_key_here => Get your own API key From 'https://openweathermap.org/api' 
 Running the App
 Connect a Device:
 
