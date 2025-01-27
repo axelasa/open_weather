@@ -7,3 +7,5 @@ const String night = 'assets/images/night.jpg';
 const String rainDrops = 'assets/images/raindrops.jpg' ;
 const String rainyClouds= 'assets/images/rainy_clouds.jpg' ;
 const String blockedSky= 'assets/images/blocked_sky.jpg' ;
+const String clearNight= 'assets/images/clear_night.jpg' ;
+const String rainyDay= 'assets/images/rainy_day.jpg' ;

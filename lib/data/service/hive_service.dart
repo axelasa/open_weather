@@ -11,6 +11,8 @@ class HiveService {
   Future<void> saveWeatherData(HiveOpenWeatherModel weatherData) async {
 
     await box.put('currentWeather', weatherData);
+
+    await box.put('lastUpdated', DateTime.now().toIso8601String() as HiveOpenWeatherModel);
   }
 
 

@@ -5,16 +5,41 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_weather/network/api_call.dart';
 import 'package:open_weather/screen/cubit/weather_cubit.dart';
 import 'package:open_weather/screen/home_page.dart';
+import 'package:open_weather/utils/connectivity.dart';
+import 'package:open_weather/utils/custom_alert_dialog.dart';
 import 'package:open_weather/utils/register_adapters.dart';
 import 'data/model/hive_weather_model.dart';
 
 
 void main() async {
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.dumpErrorToConsole(details);
+    runApp(ErrorWidgetClass(details));
+  };
    await Hive.initFlutter();
     registerAdapters();
    await Hive.openBox<HiveOpenWeatherModel>('weatherBox');
   runApp(const MyApp());
 }
+
+class ErrorWidgetClass extends StatelessWidget {
+  final FlutterErrorDetails errorDetails;
+  const ErrorWidgetClass(this.errorDetails, {super.key, });
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Custom Error Widget',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+        useMaterial3: true,
+      ),
+      home: NetworkSettingsPage(),
+      );
+  }
+}
+
 
 class MyApp extends StatelessWidget {
 

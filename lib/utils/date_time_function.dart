@@ -49,3 +49,12 @@ Map<String, List<OpenWeatherListModel>> groupWeatherByDay(List<OpenWeatherListMo
 
   return groupedData;
 }
+
+String getDayOfWeek(String dateString) {
+
+  DateTime date = DateTime.parse(dateString);
+
+  String dayOfWeek = DateFormat('EEEE').format(date);
+
+  return dayOfWeek;
+}

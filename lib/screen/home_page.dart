@@ -1,3 +1,4 @@
+import 'package:country_state_city_picker/country_state_city_picker.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,10 +9,14 @@ import 'package:open_weather/model/open_weather_model.dart';
 import 'package:open_weather/screen/cubit/weather_cubit.dart';
 import 'package:open_weather/utils/app_button.dart';
 import 'package:open_weather/utils/app_color.dart';
+import 'package:open_weather/utils/custom_alert_dialog.dart';
 
+import '../constants/language_list.dart';
 import '../data/model/hive_weather_model.dart';
 import '../data/service/hive_service.dart';
+import '../utils/connectivity.dart';
 import '../utils/date_time_function.dart';
+import '../utils/language_substring_utils.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,14 +26,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String city = 'ruiru';
+  String city = 'Nairobi';
   String lang = '';
+  late String countryValue;
+  late String stateValue;
+  late String cityValue;
   final HiveService _hiveService = HiveService();
+  String? selectedLanguage;
+  TextEditingController languageSearchController = TextEditingController();
+  TextEditingController selectCountryController = TextEditingController();
+  List<String> filteredLanguages = [];
 
   @override
   void initState() {
     super.initState();
-    weatherForecast();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      weatherForecast(lang, city);
+    });
+    filteredLanguages = languages;
   }
 
   @override
@@ -52,8 +67,14 @@ class _HomePageState extends State<HomePage> {
               if (cachedData != null) {
                 return _buildWeatherUI(cachedData.toOpenWeatherModel());
               } else {
-                return Center(
-                  child: Text("No internet connection and no cached data available."),
+                return Column(
+                  children: [
+                    CustomAlertDialog(
+                    title: 'Connection Failed',
+                    message: 'No internet connection and no cached data available.', negativeBtnText: 'cancel', onNegativePressed: (){
+                  Navigator.pop(context);
+                }),
+                  ],
                 );
               }
             }
@@ -80,6 +101,7 @@ class _HomePageState extends State<HomePage> {
     String? weatherMain;
     String weatherIcon = '';
     String bgImage = '';
+    String bgImageN = '';
     IconData?icons;
     Color bgColor = Colors.white ;
 
@@ -97,6 +119,14 @@ class _HomePageState extends State<HomePage> {
 
     debugPrint("HERE IS THE DAYS DATA '${firstEntries}' ");
 
+    bool isDaytime(int sunrise, int sunset) {
+      int currentTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      return currentTime >= sunrise && currentTime < sunset;
+    }
+
+    int sunrise = data.city?.sunrise ?? 0;
+    int sunset = data.city?.sunset ?? 0;
+
     if (dataList != null) {
       for (var weatherItem in dataList) {
         List<OpenWeatherListWeatherModel?>? weatherDetails =
@@ -113,14 +143,17 @@ class _HomePageState extends State<HomePage> {
       switch (weatherMain) {
         case "Clouds":
           bgImage = brokenClouds;
+          bgImageN = night;
           icons = Icons.cloud;
           break;
         case "Rain":
-          bgImage = rainDrops;
+          bgImage =rainyDay ;
+          bgImageN =rainDrops;
           icons = Icons.cloudy_snowing;
           break;
         case "Clear":
           bgImage = clearSky;
+          bgImageN = clearNight;
           icons = Icons.sunny;
           break;
         default:
@@ -149,7 +182,7 @@ class _HomePageState extends State<HomePage> {
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(bgImage),
+                image:isDaytime(sunrise, sunset)? AssetImage(bgImage):AssetImage(bgImageN),
                 fit: BoxFit.fitHeight,
               )),
           child: Padding(
@@ -163,7 +196,9 @@ class _HomePageState extends State<HomePage> {
                     spacing: 5,
                     children: [
                       GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          _showLanguageSelectionModal();
+                        },
                         child: Card(
                           color: Colors.transparent,
                           child: Icon(
@@ -172,7 +207,9 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          _showCitySelectionModal();
+                        },
                         child: Card(
                           color: Colors.transparent,
                           child: Icon(
@@ -248,7 +285,7 @@ class _HomePageState extends State<HomePage> {
                                       if (todayData != null)
                                         _buildWeatherRow(
                                           'Today',
-                                          todayData.main?.temp?.toStringAsFixed(1) ??
+                                          todayData.weather?.firstOrNull?.description ??
                                               '',
                                           icons!,
                                         ),
@@ -256,8 +293,7 @@ class _HomePageState extends State<HomePage> {
                                       if (tomorrowData != null)
                                         _buildWeatherRow(
                                           'Tomorrow',
-                                          tomorrowData.main?.temp
-                                              ?.toStringAsFixed(1) ??
+                                          tomorrowData.weather?.firstOrNull?.description ??
                                               '',
                                           icons!,
                                         ),
@@ -265,8 +301,7 @@ class _HomePageState extends State<HomePage> {
                                       if (dayAfterTomorrowData != null)
                                         _buildWeatherRow(
                                           '${thirdDay['day']}',
-                                          dayAfterTomorrowData.main?.temp
-                                              ?.toStringAsFixed(1) ??
+                                          dayAfterTomorrowData.weather?.firstOrNull?.description ??
                                               '',
                                           icons!,
                                         ),
@@ -275,7 +310,13 @@ class _HomePageState extends State<HomePage> {
                                         backgroundColor: AppColors.mainColor,
                                         borderColor: AppColors.mainColor,
                                         text: '5-day Forecast',
-                                        onClicked: () {},
+                                        onClicked: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            builder: (context) => _buildForecastModalSheet(context, groupedData),
+                                          );
+                                        },
                                       ),
                                       SizedBox(height: 10,)
                                     ],
@@ -394,19 +435,123 @@ class _HomePageState extends State<HomePage> {
             day,
             style: TextStyle(fontSize: 16,color: Colors.white),
           ),
+
           Text(
-            '$temp°C',
+            temp,
+            // '$temp°C',
             style: TextStyle(fontSize: 16,color: Colors.white),
           ),
 
-           Icon(weatherCondition,color: Colors.white,),
+          Icon(weatherCondition,color: Colors.white,),
 
         ],
       ),
     );
   }
 
-  void weatherForecast() {
+  Widget _buildWeatherModalSheet(String day, String temp, String description) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            day,
+            style: TextStyle(fontSize: 16,color: Colors.black),
+          ),
+
+          Text(
+            temp,
+            // '$temp°C',
+            style: TextStyle(fontSize: 16,color: Colors.black),
+          ),
+
+          Text(
+            temp,
+            // '$temp°C',
+            style: TextStyle(fontSize: 16,color: Colors.black),
+          ),
+
+        ],
+      ),
+    );
+  }
+
+  Widget _buildForecastModalSheet(BuildContext context, Map<String, List<OpenWeatherListModel>> groupedData) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.75,
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '5-day Forecast',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+          Expanded(
+            child: ListView(
+              children: groupedData.entries.map((entry) {
+                return _buildWeatherModalSheet(
+                  getDayOfWeek(entry.key),
+                  entry.value.first.weather?.firstOrNull?.description ?? '',
+                  entry.value.first.weather?.firstOrNull?.icon ?? '', // Replace with appropriate icon
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget selectCity(){
+    return Column(
+      children: [
+        SelectState(
+          onCountryChanged: (value) {
+            setState(() {
+              countryValue = value;
+            });
+          },
+          onStateChanged:(value) {
+            setState(() {
+              stateValue = value;
+            });
+          },
+          onCityChanged:(value) {
+            setState(() {
+              cityValue = value;
+            });
+          },
+
+        ),
+        InkWell(
+          onTap:(){
+            setState(() {
+              city = cityValue;
+            });
+            weatherForecast(lang,city);
+            print('country selected is $countryValue');
+            print('country selected is $stateValue');
+            print('country selected is $cityValue');
+          },
+          child: Text(' Check')
+        )
+      ],
+    );
+  }
+
+  void weatherForecast(String lang,String city) {
     Map<String, dynamic> data = {
       "q": city,
       'lang': lang,
@@ -415,4 +560,92 @@ class _HomePageState extends State<HomePage> {
     };
     BlocProvider.of<WeatherCubit>(context).fetchWeatherData(data);
   }
+
+  void _showLanguageSelectionModal() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Container(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Dropdown for language selection
+                    DropdownButton<String>(
+                      value: selectedLanguage,
+                      hint: Text("Select a language"),
+                      isExpanded: true,
+                      items: filteredLanguages.map((String language) {
+                        return DropdownMenuItem<String>(
+                          value: language,
+                          child: Text(language),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedLanguage = newValue;
+                          lang = extractLanguageCode(newValue!);
+                        });
+                      },
+                    ),
+                    SizedBox(height: 16),
+                    // Buttons at the bottom
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context); // Close the bottom sheet
+                            weatherForecast(lang,city);
+                          },
+                          child: Text("Search"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context); // Close the bottom sheet
+                          },
+                          child: Text("Cancel"),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showCitySelectionModal() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: SizedBox(
+                height: 250,
+                child: selectCity(),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+
 }
