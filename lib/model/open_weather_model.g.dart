@@ -7,15 +7,15 @@ part of 'open_weather_model.dart';
 // **************************************************************************
 
 _$OpenWeatherModelImpl _$$OpenWeatherModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$OpenWeatherModelImpl(
       cod: json['cod'] as String?,
       message: (json['message'] as num?)?.toInt(),
       cnt: (json['cnt'] as num?)?.toInt(),
       list: (json['list'] as List<dynamic>?)
           ?.map((e) => e == null
-              ? null
-              : OpenWeatherListModel.fromJson(e as Map<String, dynamic>))
+          ? null
+          : OpenWeatherListModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       city: json['city'] == null
           ? null
@@ -23,7 +23,7 @@ _$OpenWeatherModelImpl _$$OpenWeatherModelImplFromJson(
     );
 
 Map<String, dynamic> _$$OpenWeatherModelImplToJson(
-        _$OpenWeatherModelImpl instance) =>
+    _$OpenWeatherModelImpl instance) =>
     <String, dynamic>{
       'cod': instance.cod,
       'message': instance.message,
@@ -33,37 +33,37 @@ Map<String, dynamic> _$$OpenWeatherModelImplToJson(
     };
 
 _$OpenWeatherListModelImpl _$$OpenWeatherListModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$OpenWeatherListModelImpl(
       dt: (json['dt'] as num?)?.toInt(),
       main: json['main'] == null
           ? null
           : OpenWeatherListMainModel.fromJson(
-              json['main'] as Map<String, dynamic>),
+          json['main'] as Map<String, dynamic>),
       weather: (json['weather'] as List<dynamic>?)
           ?.map((e) => e == null
-              ? null
-              : OpenWeatherListWeatherModel.fromJson(e as Map<String, dynamic>))
+          ? null
+          : OpenWeatherListWeatherModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       clouds: json['clouds'] == null
           ? null
           : OpenWeatherListCloudsModel.fromJson(
-              json['clouds'] as Map<String, dynamic>),
+          json['clouds'] as Map<String, dynamic>),
       wind: json['wind'] == null
           ? null
           : OpenWeatherListWindModel.fromJson(
-              json['wind'] as Map<String, dynamic>),
+          json['wind'] as Map<String, dynamic>),
       visibility: (json['visibility'] as num?)?.toInt(),
       pop: (json['pop'] as num?)?.toInt(),
       sys: json['sys'] == null
           ? null
           : OpenWeatherListSysModel.fromJson(
-              json['sys'] as Map<String, dynamic>),
+          json['sys'] as Map<String, dynamic>),
       dtTxt: json['dt_txt'] as String?,
     );
 
 Map<String, dynamic> _$$OpenWeatherListModelImplToJson(
-        _$OpenWeatherListModelImpl instance) =>
+    _$OpenWeatherListModelImpl instance) =>
     <String, dynamic>{
       'dt': instance.dt,
       'main': instance.main,
@@ -77,7 +77,7 @@ Map<String, dynamic> _$$OpenWeatherListModelImplToJson(
     };
 
 _$OpenWeatherListMainModelImpl _$$OpenWeatherListMainModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$OpenWeatherListMainModelImpl(
       temp: (json['temp'] as num?)?.toDouble(),
       feelsLike: (json['feels_like'] as num?)?.toDouble(),
@@ -91,7 +91,7 @@ _$OpenWeatherListMainModelImpl _$$OpenWeatherListMainModelImplFromJson(
     );
 
 Map<String, dynamic> _$$OpenWeatherListMainModelImplToJson(
-        _$OpenWeatherListMainModelImpl instance) =>
+    _$OpenWeatherListMainModelImpl instance) =>
     <String, dynamic>{
       'temp': instance.temp,
       'feels_like': instance.feelsLike,
@@ -105,7 +105,7 @@ Map<String, dynamic> _$$OpenWeatherListMainModelImplToJson(
     };
 
 _$OpenWeatherListWeatherModelImpl _$$OpenWeatherListWeatherModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$OpenWeatherListWeatherModelImpl(
       id: (json['id'] as num?)?.toInt(),
       main: json['main'] as String?,
@@ -114,7 +114,7 @@ _$OpenWeatherListWeatherModelImpl _$$OpenWeatherListWeatherModelImplFromJson(
     );
 
 Map<String, dynamic> _$$OpenWeatherListWeatherModelImplToJson(
-        _$OpenWeatherListWeatherModelImpl instance) =>
+    _$OpenWeatherListWeatherModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'main': instance.main,
@@ -123,19 +123,19 @@ Map<String, dynamic> _$$OpenWeatherListWeatherModelImplToJson(
     };
 
 _$OpenWeatherListCloudsModelImpl _$$OpenWeatherListCloudsModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$OpenWeatherListCloudsModelImpl(
       all: (json['all'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$OpenWeatherListCloudsModelImplToJson(
-        _$OpenWeatherListCloudsModelImpl instance) =>
+    _$OpenWeatherListCloudsModelImpl instance) =>
     <String, dynamic>{
       'all': instance.all,
     };
 
 _$OpenWeatherListWindModelImpl _$$OpenWeatherListWindModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$OpenWeatherListWindModelImpl(
       speed: (json['speed'] as num?)?.toDouble(),
       deg: (json['deg'] as num?)?.toInt(),
@@ -143,7 +143,7 @@ _$OpenWeatherListWindModelImpl _$$OpenWeatherListWindModelImplFromJson(
     );
 
 Map<String, dynamic> _$$OpenWeatherListWindModelImplToJson(
-        _$OpenWeatherListWindModelImpl instance) =>
+    _$OpenWeatherListWindModelImpl instance) =>
     <String, dynamic>{
       'speed': instance.speed,
       'deg': instance.deg,
@@ -151,26 +151,26 @@ Map<String, dynamic> _$$OpenWeatherListWindModelImplToJson(
     };
 
 _$OpenWeatherListSysModelImpl _$$OpenWeatherListSysModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$OpenWeatherListSysModelImpl(
       pod: json['pod'] as String?,
     );
 
 Map<String, dynamic> _$$OpenWeatherListSysModelImplToJson(
-        _$OpenWeatherListSysModelImpl instance) =>
+    _$OpenWeatherListSysModelImpl instance) =>
     <String, dynamic>{
       'pod': instance.pod,
     };
 
 _$OpenWeatherCityModelImpl _$$OpenWeatherCityModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$OpenWeatherCityModelImpl(
       id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String?,
       coord: json['coord'] == null
           ? null
           : OpenWeatherCityCoordModel.fromJson(
-              json['coord'] as Map<String, dynamic>),
+          json['coord'] as Map<String, dynamic>),
       country: json['country'] as String?,
       population: (json['population'] as num?)?.toInt(),
       timezone: (json['timezone'] as num?)?.toInt(),
@@ -179,7 +179,7 @@ _$OpenWeatherCityModelImpl _$$OpenWeatherCityModelImplFromJson(
     );
 
 Map<String, dynamic> _$$OpenWeatherCityModelImplToJson(
-        _$OpenWeatherCityModelImpl instance) =>
+    _$OpenWeatherCityModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
@@ -192,14 +192,14 @@ Map<String, dynamic> _$$OpenWeatherCityModelImplToJson(
     };
 
 _$OpenWeatherCityCoordModelImpl _$$OpenWeatherCityCoordModelImplFromJson(
-        Map<String, dynamic> json) =>
+    Map<String, dynamic> json) =>
     _$OpenWeatherCityCoordModelImpl(
       lat: (json['lat'] as num?)?.toDouble(),
       lon: (json['lon'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$$OpenWeatherCityCoordModelImplToJson(
-        _$OpenWeatherCityCoordModelImpl instance) =>
+    _$OpenWeatherCityCoordModelImpl instance) =>
     <String, dynamic>{
       'lat': instance.lat,
       'lon': instance.lon,
