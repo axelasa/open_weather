@@ -8,6 +8,7 @@ Map<String, String> convertUnixTimestamp(int unixTimestamp) {
   return {
     'day': DateFormat('EEEE').format(dateTime),
     'dateTime': DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime),
+    'time': DateFormat('HH:mm:ss').format(dateTime),
     'month': DateFormat('MMMM').format(dateTime),
   };
 }
