@@ -8,6 +8,7 @@ Map<String, String> convertUnixTimestamp(int unixTimestamp) {
   return {
     'day': DateFormat('EEEE').format(dateTime),
     'dateTime': DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime),
+    'time': DateFormat('HH:mm:ss').format(dateTime),
     'month': DateFormat('MMMM').format(dateTime),
   };
 }
@@ -54,7 +55,7 @@ String getDayOfWeek(String dateString) {
 
   DateTime date = DateTime.parse(dateString);
 
-  String dayOfWeek = DateFormat('EEEE').format(date);
+  String dayOfWeek = DateFormat('EE').format(date);
 
   return dayOfWeek;
 }
