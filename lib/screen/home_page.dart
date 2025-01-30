@@ -171,6 +171,7 @@ class _HomePageState extends State<HomePage> {
           break;
         default:
           bgImage = day;
+          bgImageN = night;
           break;
       }
     }
@@ -896,25 +897,27 @@ class _HomePageState extends State<HomePage> {
   Widget _buildWeatherModalSheet(String day, String temp, String description) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            day,
-            style: TextStyle(fontSize: 16, color: Colors.black),
-          ),
-          Text(
-            temp,
-            // '$temp°C',
-            style: TextStyle(fontSize: 16, color: Colors.black),
-          ),
-          Text(
+      child:
+        ListTile(
+          leading:Text(
+          day,
+          style: TextStyle(fontSize: 16, color: Colors.black,),
+        ),
+
+          title: Text(
             description,
             // '$temp°C',
-            style: TextStyle(fontSize: 16, color: Colors.black),
+            style: TextStyle(fontSize: 16, color: Colors.black,),
+            textAlign: TextAlign.center,
           ),
-        ],
-      ),
+
+          trailing: Text(
+      temp,
+      // '$temp°C',
+      style: TextStyle(fontSize: 16, color: Colors.black,),
+      // textAlign: TextAlign.center,
+    ),
+        ),
     );
   }
 
